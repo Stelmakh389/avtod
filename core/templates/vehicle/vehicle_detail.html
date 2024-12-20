@@ -1,0 +1,278 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}{{ vehicle.brand }} - {{ vehicle.vin }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <h2 class="mb-0 text-primary">
+                <i class="fas fa-car me-2"></i>{{ vehicle.brand }}
+                {% if vehicle.vin %}
+                    <small class="text-muted ms-2 fs-6">VIN: {{ vehicle.vin }}</small>
+                {% endif %}
+            </h2>
+            <div class="btn-group">
+                <a href="{% url 'vehicle-update' vehicle.pk %}" class="btn btn-outline-primary">
+                    <i class="fas fa-edit"></i> Изменить
+                </a>
+                <a href="{% url 'vehicle-delete' vehicle.pk %}" class="btn btn-outline-danger">
+                    <i class="fas fa-trash"></i> Удалить
+                </a>
+            </div>
+        </div>
+        <div class="row card-body">
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">Данные заказчика</h5>
+                    </div>
+                    <table class="table table-sm">
+                        <tbody>
+                            {% for field in fields %}
+                                {% if field.name in 'customer_info,legal_address,actual_address,receive_date,customer_infos'|split:',' %}
+                                    <tr>
+                                        <th class="bg-light" width="40%">{{ field.verbose_name }}</th>
+                                        <td>{{ vehicle|getattribute:field.name|default:"-" }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">Основные характеристики ТС</h5>
+                    </div>
+                        <table class="table table-sm">
+                            <tbody>
+                                {% for field in fields %}
+                                    {% if field.name in 'brand,commercial_name,vehicle_type,chassis,vin,manufacture_date,category,mileage,fuel_type'|split:',' %}
+                                        <tr>
+                                            <th class="bg-light" width="40%">{{ field.verbose_name }}</th>
+                                            <td>
+                                                {% if field.name == 'fuel_type' %}
+                                                    {{ vehicle.get_fuel_type_display }}
+                                                {% else %}
+                                                    {{ vehicle|getattribute:field.name|default:"-" }}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">Данные производителя</h5>
+                    </div>
+                        <table class="table table-sm">
+                            <tbody>
+                                {% for field in fields %}
+                                    {% if field.name in 'manufacturer_name,manufacturer_legal_address,manufacturer_actual_address'|split:',' %}
+                                        <tr>
+                                            <th class="bg-light" width="40%">{{ field.verbose_name }}</th>
+                                            <td>{{ vehicle|getattribute:field.name|default:"-" }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <h5 class="mb-0">Данные испытаний</h5>
+                    </div>
+                    
+                        <table class="table table-sm">
+                            <tbody>
+                                {% for field in fields %}
+                                    {% if field.name in 'test_address,test_date,temperature,humidity,pressure,additional_info,additional_info_two'|split:',' %}
+                                        <tr>
+                                            <th class="bg-light" width="40%">{{ field.verbose_name }}</th>
+                                            <td>{{ vehicle|getattribute:field.name|default:"-" }}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <!-- После таблицы с основной информацией -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <!-- Средства измерения -->
+                    {% if measurement_tools %}
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-3">
+                                <i class="fas fa-ruler me-2"></i>Средства измерения
+                            </h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Наименование</th>
+                                            <th>Заводской №</th>
+                                            <th>Класс точности</th>
+                                            <th>Дата поверки</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in measurement_tools %}
+                                            <tr>
+                                                <td>{{ item.name }}</td>
+                                                <td>{{ item.zav_nomer }}</td>
+                                                <td>{{ item.klass_toch }}</td>
+                                                <td>{{ item.data_poverk|date:"d.m.Y" }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% endif %}
+            
+                    <!-- Испытательное оборудование -->
+                    {% if testing_equipment %}
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-3">
+                                <i class="fas fa-cogs me-2"></i>Испытательное оборудование
+                            </h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Наименование</th>
+                                            <th>Заводской №</th>
+                                            <th>Характеристики</th>
+                                            <th>Дата поверки</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in testing_equipment %}
+                                            <tr>
+                                                <td>{{ item.name }}</td>
+                                                <td>{{ item.zav_nomer }}</td>
+                                                <td>{{ item.klass_toch }}</td>
+                                                <td>{{ item.data_poverk|date:"d.m.Y" }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% endif %}
+            
+                    <!-- Вспомогательное оборудование -->
+                    {% if auxiliary_equipment %}
+                        <div class="mb-4">
+                            <h5 class="text-primary mb-3">
+                                <i class="fas fa-tools me-2"></i>Вспомогательное оборудование
+                            </h5>
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Наименование</th>
+                                            <th>Заводской №</th>
+                                            <th>Характеристики</th>
+                                            <th>Примечание</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in auxiliary_equipment %}
+                                            <tr>
+                                                <td>{{ item.name }}</td>
+                                                <td>{{ item.zav_nomer }}</td>
+                                                <td>{{ item.klass_toch }}</td>
+                                                <td>{{ item.other }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    {% endif %}
+            
+                    {% if not measurement_tools and not testing_equipment and not auxiliary_equipment %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>Оборудование для испытаний не выбрано
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Фотографии -->
+            {% if vehicle.vehicle_photos.all %}
+                <div class="row">
+                    {% for photo in vehicle.vehicle_photos.all %}
+                        <div class="col-md-3 mb-3">
+                            <div class="card">
+                                <img src="{{ photo.image.url }}" class="card-img-top" alt="Фото автомобиля">
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted">Фотографии не загружены</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card mt-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Протоколы</h4>
+            <a href="{% url 'generate-protocols' vehicle.pk %}" class="btn btn-primary">
+                <i class="fas fa-file-alt"></i> Сформировать протоколы
+            </a>
+        </div>
+        <div class="card-body">
+            {% if vehicle.protocols.exists %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Тип протокола</th>
+                                <th>DOCX</th>
+                                <th>PDF</th>
+                                <th>Дата создания</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for protocol in vehicle.protocols.all %}
+                                <tr>
+                                    <td>{{ protocol.get_protocol_type_display }}</td>
+                                    <td>
+                                        {% if protocol.docx_file %}
+                                            <a href="{{ protocol.docx_file.url }}" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-file-word"></i> Скачать DOCX
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if protocol.pdf_file %}
+                                            <a href="{{ protocol.pdf_file.url }}" class="btn btn-sm btn-outline-danger">
+                                                <i class="fas fa-file-pdf"></i> Скачать PDF
+                                            </a>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ protocol.created_at|date:"d.m.Y H:i" }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-muted">Протоколы еще не сгенерированы</p>
+            {% endif %}
+        </div>
+</div>
+{% endblock %}

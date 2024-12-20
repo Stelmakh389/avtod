@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if form.instance.pk %}
+        Редактировать {{ equipment_type_name }}
+    {% else %}
+        Добавить {{ equipment_type_name }}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2>
+                {% if form.instance.pk %}
+                    Редактирование элемента
+                {% else %}
+                    Создать элемент оборудования
+                {% endif %}
+            </h2>
+        </div>
+        <div class="card-body">
+            <form method="post" novalidate>
+                {% csrf_token %}
+                
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <h5>Пожалуйста, исправьте следующие ошибки:</h5>
+                        {{ form.errors }}
+                    </div>
+                {% endif %}
+
+                <div class="row">
+                    <!-- Левая колонка -->
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            {{ form.equipment_type.label_tag }}
+                            {{ form.equipment_type }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.name.label_tag }}
+                            {{ form.name }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.tip.label_tag }}
+                            {{ form.tip }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.zav_nomer.label_tag }}
+                            {{ form.zav_nomer }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.inv_nomer.label_tag }}
+                            {{ form.inv_nomer }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.reg_nomer.label_tag }}
+                            {{ form.reg_nomer }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.kol_vo.label_tag }}
+                            {{ form.kol_vo }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.klass_toch.label_tag }}
+                            {{ form.klass_toch }}
+                        </div>
+                    </div>
+                    
+                    <!-- Правая колонка -->
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            {{ form.predel.label_tag }}
+                            {{ form.predel }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.period_poverk.label_tag }}
+                            {{ form.period_poverk }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.category_si.label_tag }}
+                            {{ form.category_si }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.organ_poverk.label_tag }}
+                            {{ form.organ_poverk }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.data_poverk.label_tag }}
+                            {{ form.data_poverk }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.srok_poverk.label_tag }}
+                            {{ form.srok_poverk }}
+                        </div>
+                        <div class="mb-3">
+                            {{ form.other.label_tag }}
+                            {{ form.other }}
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-primary">
+                        {% if form.instance.pk %}
+                            Сохранить изменения
+                        {% else %}
+                            Создать
+                        {% endif %}
+                    </button>
+                    <a href="{{ cancel_url }}" class="btn btn-secondary">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

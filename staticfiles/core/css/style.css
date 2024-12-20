@@ -1,0 +1,34 @@
+/* Базовые стили для приложения */
+.navbar {
+    margin-bottom: 20px;
+}
+
+.card {
+    margin-bottom: 20px;
+}
+
+.alert {
+    margin-top: 20px;
+}
+
+/* Стили для форм */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Стили для таблиц */
+.table-responsive {
+    margin-top: 20px;
+}
+
+/* Стили для фотографий */
+.vehicle-photo {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+td a {
+    text-decoration: none;
+    color: black;
+}

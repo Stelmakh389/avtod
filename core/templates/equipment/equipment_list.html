@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ equipment_type_name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3">
+        <h1 class="mb-2 mb-md-0">{{ equipment_type_name }}</h1>
+    
+        <div class="col-md-4 mb-2 mb-md-0">
+            <form method="get" class="d-flex">
+                <input type="text" name="search" class="form-control me-2" 
+                       placeholder="Поиск по наименованию..." 
+                       value="{{ request.GET.search }}">
+                <button type="submit" class="btn btn-outline-primary">
+                    <i class="fas fa-search"></i>
+                </button>
+                {% if request.GET.search %}
+                    <a href="?" class="btn btn-outline-secondary ms-2">
+                        <i class="fas fa-times"></i> Сброс
+                    </a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3">
+        <div class="group_buttons">
+            <a href="{% url 'equipment-export' view.url_prefix|cut:'-tool'|cut:'-equipment' %}" class="btn btn-outline-primary mb-2 mb-md-0 me-md-2 me-2">
+                <i class="fas fa-file-download"></i> Скачать
+            </a>
+            <a href="{% url 'equipment-import' view.url_prefix|cut:'-tool'|cut:'-equipment' %}" class="btn btn-outline-primary mb-2 mb-md-0 me-md-2">
+                <i class="fas fa-file-upload"></i> Загрузить
+            </a>
+        </div>
+        <a href="{% url 'equipment-delete-all' view.url_prefix|cut:'-tool'|cut:'-equipment' %}" class="btn btn-outline-danger mb-2 mb-md-0 me-md-2">
+            <i class="fas fa-trash-alt"></i> Удалить все
+        </a>
+        <a href="{% url view.url_prefix|add:'-create' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Добавить элемент
+        </a>        
+    </div>
+    
+
+    {% if equipment_list %}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Наименование</th>
+                    <th>Зав. №</th>
+                    <th>Инв. №</th>
+                    <th>Рег. №</th>
+                    <th>Погр-сть</th>
+                    <th>Предел</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in equipment_list %}
+                <tr>
+                    <td><a href="{% url update_url item.pk %}">{{ item.id }}</a></td>
+                    <td><a href="{% url update_url item.pk %}">{{ item.name }}</a></td>
+                    <td><a href="{% url update_url item.pk %}">{{ item.zav_nomer }}</a></td>
+                    <td><a href="{% url update_url item.pk %}">{{ item.inv_nomer }}</a></td>
+                    <td><a href="{% url update_url item.pk %}">{{ item.reg_nomer }}</a></td>
+                    <td><a href="{% url update_url item.pk %}">{{ item.klass_toch }}</a></td>
+                    <td><a href="{% url update_url item.pk %}">{{ item.predel }}</a></td>
+                    <td>
+                        <div class="group_buttons">
+                            <a href="{% url view.url_prefix|add:'-duplicate' item.pk %}" class="btn"><i class="fas fa-copy"></i></a>
+                            <a href="{% url delete_url item.pk %}" class="btn"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% include 'includes/pagination.html' %}
+
+    {% else %}
+        {% if request.GET.search %}
+            <div class="alert alert-warning" role="alert">
+                По запросу "{{ request.GET.search }}" ничего не найдено.
+                <a href="?" class="alert-link">Сбросить поиск</a>
+            </div>
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                {{ equipment_type_name }} пока не добавлено.
+                <a href="{% url view.url_prefix|add:'-create' %}" class="alert-link">Добавить первое {{ equipment_type_name_accusative }}</a>
+            </div>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
+    });
+</script>
+{% endblock %}

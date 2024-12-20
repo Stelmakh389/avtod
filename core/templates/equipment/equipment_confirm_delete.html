@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Удаление {{ equipment_type_name }}{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2>Подтверждение удаления</h2>
+        </div>
+        <div class="card-body">
+            <p class="lead">
+                Вы действительно хотите удалить {{ equipment_type_name }} "{{ object.get_name }}"?
+            </p>
+            
+            <div class="alert alert-warning">
+                <h5 class="alert-heading">Внимание!</h5>
+                <p>Это действие нельзя будет отменить. Вся информация о данном {{ equipment_type_name }} будет удалена безвозвратно.</p>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Информация:</h5>
+                    <dl class="row">
+                        <dt class="col-sm-4">Наименование:</dt>
+                        <dd class="col-sm-8">{{ object.get_name }}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Подтвердить удаление
+                    </button>
+                    <a href="{% url view.url_prefix|add:'-list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Отмена
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

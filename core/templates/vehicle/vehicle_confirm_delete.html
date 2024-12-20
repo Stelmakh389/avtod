@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}Удаление карточки автомобиля{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2>Подтверждение удаления</h2>
+        </div>
+        <div class="card-body">
+            <p class="lead">
+                Вы действительно хотите удалить карточку автомобиля "{{ vehicle.brand }}" (VIN: {{ vehicle.vin }})?
+            </p>
+            
+            <div class="alert alert-warning">
+                <h5 class="alert-heading">Внимание!</h5>
+                <p>Это действие нельзя будет отменить. Вся информация о данном автомобиле будет удалена безвозвратно.</p>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Информация об автомобиле:</h5>
+                    <dl class="row">
+                        <dt class="col-sm-4">Марка ТС:</dt>
+                        <dd class="col-sm-8">{{ vehicle.brand }}</dd>
+
+                        <dt class="col-sm-4">VIN:</dt>
+                        <dd class="col-sm-8">{{ vehicle.vin }}</dd>
+
+                        <dt class="col-sm-4">Заказчик:</dt>
+                        <dd class="col-sm-8">{{ vehicle.customer.name }}</dd>
+
+                        <dt class="col-sm-4">Дата испытаний:</dt>
+                        <dd class="col-sm-8">{{ vehicle.test_date }}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Подтвердить удаление
+                    </button>
+                    <a href="{% url 'vehicle-list' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Отмена
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

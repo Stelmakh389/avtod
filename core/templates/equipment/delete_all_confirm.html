@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %}Удаление всех записей{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h2>Подтверждение удаления всех записей</h2>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-danger">
+                <h5 class="alert-heading">Внимание!</h5>
+                <p>Вы собираетесь удалить ВСЕ записи {{ equipment_type_name }}!</p>
+                <p>Всего будет удалено записей: {{ items_count }}</p>
+                <p>Это действие нельзя будет отменить. Вся информация будет удалена безвозвратно.</p>
+            </div>
+
+            <form method="post">
+                {% csrf_token %}
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Подтвердить удаление всех записей
+                    </button>
+                    <a href="{% url cancel_url %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Отмена
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
