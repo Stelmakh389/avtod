@@ -37,10 +37,34 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'logout' %}">
-                        <i class="fas fa-sign-out-alt me-2" style="font-size:20px;"></i><span>Выход</span>
-                    </a>
+                    <form method="post" action="{% url 'logout' %}" class="logout-form">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link logout-button">
+                            <i class="fas fa-sign-out-alt me-2" style="font-size:20px;"></i><span>Выход</span>
+                        </button>
+                    </form>
                 </li>
+                <style>
+                    .logout-button {
+                        background: none;
+                        border: none;
+                        width: 100%;
+                        padding: 8px 16px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        text-align: left;
+                    }
+
+                    .logout-button:hover {
+                        background-color: your_hover_color;
+                    }
+
+                    .logout-form {
+                        margin: 0;
+                        padding: 0;
+                    }
+                </style>>
             </ul>
         </div>
     </header>

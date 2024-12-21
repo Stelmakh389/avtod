@@ -149,7 +149,7 @@ def generate_docx(vehicle, protocol_type, context):
         raise   
 
 def generate_pdf(docx_path):
-    """Конвертирует DOCX в PDF используя unoconv"""
+    """Конвертирует DOCX в PDF используя LibreOffice"""
     try:
         # Получаем полные пути
         docx_full_path = os.path.join(settings.MEDIA_ROOT, docx_path)
@@ -159,14 +159,33 @@ def generate_pdf(docx_path):
         # Создаем директорию для PDF если её нет
         os.makedirs(os.path.dirname(pdf_full_path), exist_ok=True)
         
-        # Конвертируем используя unoconv
         try:
-            subprocess.run(['unoconv', '-f', 'pdf', '-o', pdf_full_path, docx_full_path], check=True)
+            process = subprocess.Popen([
+                '/usr/bin/libreoffice',
+                '--headless',
+                '--convert-to',
+                'pdf',
+                '--outdir',
+                os.path.dirname(pdf_full_path),
+                docx_full_path
+            ], 
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.PIPE,
+            env={'HOME': '/tmp'})
+            
+            stdout, stderr = process.communicate()
+            print(f"LibreOffice output: {stdout.decode()}")
+            print(f"LibreOffice errors: {stderr.decode()}")
+            
+            if process.returncode != 0:
+                raise subprocess.CalledProcessError(process.returncode, process.args)
+                
             print(f"PDF успешно создан: {pdf_path}")
+            
         except FileNotFoundError:
-            raise FileNotFoundError("Утилита 'unoconv' не найдена. Установите её в систему.")
+            raise FileNotFoundError("LibreOffice не найден. Установите: sudo apt install libreoffice")
         except subprocess.CalledProcessError as e:
-            print(f"Ошибка при выполнении unoconv: {e}")
+            print(f"Ошибка при выполнении LibreOffice: {e}")
             raise
             
         return pdf_path

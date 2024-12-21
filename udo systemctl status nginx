@@ -1,0 +1,12 @@
+[0;1;32m●[0m gunicorn_autodiagnostics.service - gunicorn daemon for autodiagnostics
+     Loaded: loaded (/etc/systemd/system/gunicorn_autodiagnostics.service; enabled; vendor preset: enabled)
+     Active: [0;1;32mactive (running)[0m since Sat 2024-12-21 01:12:31 MSK; 37s ago
+   Main PID: 485400 (gunicorn)
+      Tasks: 4 (limit: 4532)
+     Memory: 89.9M
+        CPU: 707ms
+     CGroup: /system.slice/gunicorn_autodiagnostics.service
+             ├─485400 /var/www/avtod/venv/bin/python3 /var/www/avtod/venv/bin/gunicorn --access-logfile /var/log/gunicorn-access.log --error-logfile /var/log/gunicorn-error.log --workers 3 --bind unix:/var/www/avtod/autodiagnostics.sock autodiagnostics.wsgi:application
+             ├─485401 /var/www/avtod/venv/bin/python3 /var/www/avtod/venv/bin/gunicorn --access-logfile /var/log/gunicorn-access.log --error-logfile /var/log/gunicorn-error.log --workers 3 --bind unix:/var/www/avtod/autodiagnostics.sock autodiagnostics.wsgi:application
+             ├─485402 /var/www/avtod/venv/bin/python3 /var/www/avtod/venv/bin/gunicorn --access-logfile /var/log/gunicorn-access.log --error-logfile /var/log/gunicorn-error.log --workers 3 --bind unix:/var/www/avtod/autodiagnostics.sock autodiagnostics.wsgi:application
+             └─485403 /var/www/avtod/venv/bin/python3 /var/www/avtod/venv/bin/gunicorn --access-logfile /var/log/gunicorn-access.log --error-logfile /var/log/gunicorn-error.log --workers 3 --bind unix:/var/www/avtod/autodiagnostics.sock autodiagnostics.wsgi:application
